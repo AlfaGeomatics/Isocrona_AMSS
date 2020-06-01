@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 1629px;
+            height: 907px;
+        }
+        </style>
+        <title>TIEMPOS DE DESPLAZAMIENTO DESDE KM 0</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Isochrones_1.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[13.566817760058488,-89.4533867467462],[13.859728287493288,-88.91134309935101]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_Z_SinCity_0');
+        map.getPane('pane_Z_SinCity_0').style.zIndex = 100;
+        var layer_Z_SinCity_0 = L.tileLayer('https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i513226880!3m17!2ses-ES!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy5lOmx8cC52Om9uLHMuZTpsLnQuZnxwLnM6MzZ8cC5jOiNmZjAwMDAwMHxwLmw6NDAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmMDAwMDAwfHAubDoxNixzLmU6bC5pfHAudjpvZmYscy50OjF8cy5lOmcuZnxwLmM6I2ZmMDAwMDAwfHAubDoyMCxzLnQ6MXxzLmU6Zy5zfHAuYzojZmYwMDAwMDB8cC5sOjE3fHAudzoxLjIscy50OjE5fHMuZTpsLnQuZnxwLmM6I2ZmYzRjNGM0LHMudDoyMHxzLmU6bC50LmZ8cC5jOiNmZjcwNzA3MCxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMDAwMDAwfHAubDoyMCxzLnQ6MnxzLmU6Z3xwLmM6I2ZmMDAwMDAwfHAubDoyMXxwLnY6b24scy50OjMzfHMuZTpnfHAudjpvbixzLnQ6NDl8cy5lOmcuZnxwLmM6I2ZmYmUyMDI2fHAubDowfHAudjpvbixzLnQ6NDl8cy5lOmcuc3xwLnY6b2ZmLHMudDo0OXxzLmU6bC50LmZ8cC52Om9mZixzLnQ6NDl8cy5lOmwudC5zfHAudjpvZmZ8cC5oOiNmZjAwMGEscy50OjUwfHMuZTpnfHAuYzojZmYwMDAwMDB8cC5sOjE4LHMudDo1MHxzLmU6Zy5mfHAuYzojZmY1NzU3NTcscy50OjUwfHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDo1MHxzLmU6bC50LnN8cC5jOiNmZjJjMmMyYyxzLnQ6NTF8cy5lOmd8cC5jOiNmZjAwMDAwMHxwLmw6MTYscy50OjUxfHMuZTpsLnQuZnxwLmM6I2ZmOTk5OTk5LHMudDo1MXxzLmU6bC50LnN8cC5zOi01MixzLnQ6NHxzLmU6Z3xwLmM6I2ZmMDAwMDAwfHAubDoxOSxzLnQ6NnxzLmU6Z3xwLmM6I2ZmMDAwMDAwfHAubDoxNw!4e0', {
+            pane: 'pane_Z_SinCity_0',
+            opacity: 0.9,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_Z_SinCity_0;
+        map.addLayer(layer_Z_SinCity_0);
+        function pop_Isochrones_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">TIEMPO (min)</th>\
+                        <td>' + (feature.properties['AA_MINS'] !== null ? autolinker.link(feature.properties['AA_MINS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Isochrones_1_0(feature) {
+            switch(String(feature.properties['AA_MINS'])) {
+                case '5':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(247,252,245,0.5)',
+                interactive: true,
+            }
+                    break;
+                case '10':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(213,239,207,0.5)',
+                interactive: true,
+            }
+                    break;
+                case '15':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(158,216,152,0.5)',
+                interactive: true,
+            }
+                    break;
+                case '20':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(84,181,103,0.5)',
+                interactive: true,
+            }
+                    break;
+                case '25':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(29,134,65,0.5)',
+                interactive: true,
+            }
+                    break;
+                case '30':
+                    return {
+                pane: 'pane_Isochrones_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.5)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 0.3,
+                fillColor: 'rgba(0,68,27,0.5)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Isochrones_1');
+        map.getPane('pane_Isochrones_1').style.zIndex = 101;
+        map.getPane('pane_Isochrones_1').style['mix-blend-mode'] = 'normal';
+        var layer_Isochrones_1 = new L.geoJson(json_Isochrones_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Isochrones_1',
+            layerName: 'layer_Isochrones_1',
+            pane: 'pane_Isochrones_1',
+            onEachFeature: pop_Isochrones_1,
+            style: style_Isochrones_1_0,
+        });
+        bounds_group.addLayer(layer_Isochrones_1);
+        map.addLayer(layer_Isochrones_1);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>TIEMPOS DE DESPLAZAMIENTO DESDE KM 0</h2>';
+            };
+            title.addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
